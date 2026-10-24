@@ -304,7 +304,7 @@ footer{border-top:1px solid var(--rule);margin-top:26px;padding:18px 0 38px;posi
   <h1>竞赛<em>待办</em>清单</h1>
   <p class="lede">
     学校 2026 年认定的 <b>328 项</b>赛事，按认定顺序排在这里。点标题展开赛程和准备清单，左边勾选框记自己的进度。
-    39 项写了详细赛程，其中 <b>10 项</b>的时间查到了官方通知，标「核实」；其余按往届推算，标「推算」。
+    39 项写了详细赛程，其中 <b><span id="n-ok">9</span> 项</b>的时间查到了官方通知，标「核实」；其余按往届推算，标「推算」。
   </p>
   <div class="stats">
     <div class="stat"><b id="m-total">328</b><span>项赛事</span></div>
@@ -334,7 +334,7 @@ footer{border-top:1px solid var(--rule);margin-top:26px;padding:18px 0 38px;posi
   <div class="wrap foot-in">
     <p>
       <b>关于时间</b>　名录、级别、归口部门取自学校《单项奖学金评定参考项目列表（2026）》，未作改动。
-      标「核实」的 10 项查到 2026 或 2027 年官方通知或高校公开文件；标「推算」的按往届规律推，不是官方日期，
+      标「核实」的 <span id="n-ok2">9</span> 项查到 2026 或 2027 年官方通知或高校公开文件；标「推算」的按往届规律推，不是官方日期，
       报名前必须再看一眼本校通知。没有一条日期是编的。
     </p>
     <p class="mono">BUILT 2026.10.24<br>328 ITEMS / 39 DETAILED</p>
@@ -359,6 +359,11 @@ footer{border-top:1px solid var(--rule);margin-top:26px;padding:18px 0 38px;posi
   $('#m-total').textContent=items.length;
   $('#m-now').textContent=nNow;
   $('#m-feat').textContent=nFeat;
+  // 核实条数不写死，从数据里数，免得以后改数据文案对不上
+  var nOk=items.filter(function(i){return i.conf==='已核实'}).length;
+  var e1=$('#n-ok'),e2=$('#n-ok2');
+  if(e1)e1.textContent=nOk;
+  if(e2)e2.textContent=nOk;
 
   var today=new Date();today.setHours(0,0,0,0);
   var dls=items.filter(function(i){return i.dl}).map(function(i){
