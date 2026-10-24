@@ -26,7 +26,7 @@
   --barh:51px;
 }
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;overflow-y:scroll;scrollbar-gutter:stable}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;overflow-y:scroll;scrollbar-gutter:stable;overflow-anchor:none}
 body{
   margin:0;background:var(--paper);color:var(--ink);
   font-family:var(--sans);font-size:15px;line-height:1.65;
@@ -374,15 +374,27 @@ footer{border-top:1px solid var(--rule);margin-top:26px;padding:18px 0 38px;posi
     $('#dl-item').textContent='已知截止都已过去';
   }
 
-  function controlsTop(){
+  // 筛选栏吸顶后 getBoundingClientRect 恒为 0，拿它当锚点算不出位置。
+  // 改成用 main 的稳定文档位置反推筛选栏该停在哪儿：main 顶在筛选栏下方，减去筛选栏高度即可。
+  function stickyAnchor(){
     var c=document.querySelector('.controls');
-    return c ? c.getBoundingClientRect().top+window.pageYOffset : 0;
+    var m=document.querySelector('main');
+    if(!c||!m)return 0;
+    var h=c.offsetHeight||0;
+    var top=m.getBoundingClientRect().top+window.pageYOffset;
+    return Math.max(0,Math.round(top-h));
   }
-  // 切换筛选后列表会骤短，先把视口拉回筛选栏，避免停在空白处来回跳
+  // 切换筛选后列表会骤短或骤长，先把视口拉回筛选栏顶端，避免停在空白处或跳到别处
   function applyFilter(){
     var keep=window.pageYOffset;
     sync();render();
-    if(keep>controlsTop())window.scrollTo(0,controlsTop());
+    var a=stickyAnchor();
+    // 只有本来就滚过了筛选栏才回拉；停在顶部看首屏的用户不该被推下去
+    // 这里必须是瞬时滚动：html 上设了 scroll-behavior:smooth，用平滑滚动会把这次修正演成一段滑动
+    if(keep>=a){
+      try{window.scrollTo({top:a,left:0,behavior:'instant'})}
+      catch(e){window.scrollTo(0,a)}
+    }
   }
   var modes=[{k:'all',t:'全部',n:items.length},
              {k:'now',t:'现在能报',n:nNow},
