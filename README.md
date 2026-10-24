@@ -20,3 +20,12 @@ python data.py      # 生成 data.json
 python render.py    # 生成 index.html
 python make_docx.py # 生成 docx
 ```
+
+## 版本
+
+| 标签 | 改了什么 |
+| --- | --- |
+| v1.0.2 | 修好切换筛选时的视口跳动：把 `overflow-anchor:none` 落到 `html` 上，回拉锚点改用 `main` 位置反推，滚动改瞬时 |
+| v1.0.1 | 第一次尝试修抖动，滚动条占位生效，另两处未生效 |
+| v1.0 | 首次发布，328 项全部收录 |
+
