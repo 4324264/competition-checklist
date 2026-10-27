@@ -42,32 +42,32 @@ body::before{
 
 /* masthead */
 .masthead{border-bottom:1px solid var(--rule);position:relative;z-index:2}
-.masthead .wrap{display:flex;align-items:center;justify-content:space-between;height:42px;gap:16px}
-.brand,.edition{font-size:10.5px;letter-spacing:.15em;color:var(--ink-3);font-family:var(--mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.masthead .wrap{display:flex;align-items:center;justify-content:space-between;height:30px;gap:16px}
+.brand,.edition{font-size:9.5px;letter-spacing:.12em;color:var(--ink-3);font-family:var(--mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .edition b{color:var(--red);font-weight:500}
 .edition span{opacity:.45}
 
 /* hero */
-.hero{padding-top:26px;padding-bottom:14px}
-.kicker{font-family:var(--mono);font-size:9.5px;letter-spacing:.28em;color:var(--red);margin-bottom:10px;text-transform:uppercase}
+.hero{padding-top:15px;padding-bottom:9px}
+.kicker{font-family:var(--mono);font-size:8px;letter-spacing:.22em;color:var(--red);margin-bottom:6px;text-transform:uppercase}
 h1{
-  font-family:var(--serif);font-size:clamp(28px,3.6vw,44px);line-height:1.08;
-  font-weight:600;letter-spacing:-.01em;margin:0 0 9px;
+  font-family:var(--serif);font-size:clamp(22px,2.6vw,31px);line-height:1.1;
+  font-weight:600;letter-spacing:-.01em;margin:0 0 6px;
 }
 h1 em{font-style:normal;color:var(--red)}
-.lede{font-size:12.5px;line-height:1.7;color:var(--ink-2);max-width:52em;margin:0}
+.lede{font-size:11.5px;line-height:1.6;color:var(--ink-2);max-width:54em;margin:0}
 .lede b{font-weight:500;color:var(--ink)}
 
 /* stat strip */
 .stats{
-  display:grid;grid-template-columns:repeat(4,1fr);margin-top:14px;
+  display:grid;grid-template-columns:repeat(4,1fr);margin-top:10px;
   border-top:1px solid var(--ink);border-bottom:1px solid var(--rule);
 }
-.stat{padding:9px 18px 8px;border-right:1px solid var(--rule-2)}
+.stat{padding:6px 16px 6px;border-right:1px solid var(--rule-2)}
 .stat:first-child{padding-left:0}
 .stat:last-child{border-right:0;padding-right:0}
-.stat b{display:block;font-family:var(--serif);font-size:23px;font-weight:600;line-height:1;letter-spacing:-.02em}
-.stat span{display:block;font-size:10.5px;color:var(--ink-3);letter-spacing:.04em;margin-top:3px;line-height:1.4;overflow-wrap:anywhere}
+.stat b{display:block;font-family:var(--serif);font-size:19px;font-weight:600;line-height:1;letter-spacing:-.02em}
+.stat span{display:block;font-size:9.5px;color:var(--ink-3);letter-spacing:.04em;margin-top:2px;line-height:1.35;overflow-wrap:anywhere}
 .stat-dl b{color:var(--red)}
 .stat-dl span{color:var(--ink-2)}
 
@@ -151,11 +151,14 @@ ul.list{list-style:none;margin:0;padding:0}
 .chk input{position:absolute;opacity:0;width:0;height:0}
 .box{
   display:block;width:17px;height:17px;border:1.4px solid var(--ink-4);
-  background:var(--card);position:relative;transition:.16s var(--ease);
+  background:var(--card);position:relative;
+  /* 只过渡边框，底色立即切换：点完马上看到颜色，反馈更确定 */
+  transition:border-color .16s var(--ease);
 }
 .chk:hover .box{border-color:var(--ink-2)}
 .chk input:focus-visible + .box{outline:2px solid var(--red);outline-offset:3px}
-.chk input:checked + .box{background:var(--red);border-color:var(--red)}
+/* 勾上之后方框用这一项的态度色（--mkc），没有态度色才退回红 */
+.chk input:checked + .box{background:var(--mkc,var(--red));border-color:var(--mkc,var(--red))}
 .chk input:checked + .box::after{
   content:"";position:absolute;left:5px;top:1.5px;width:4px;height:9px;
   border:solid #fff;border-width:0 1.6px 1.6px 0;transform:rotate(42deg);
@@ -164,6 +167,7 @@ ul.list{list-style:none;margin:0;padding:0}
   flex:1;display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:0 9px;
   align-items:baseline;background:none;border:0;text-align:left;cursor:pointer;
   padding:10px 0;font-family:inherit;color:inherit;min-width:0;
+  -webkit-tap-highlight-color:transparent;
 }
 .rowmain:focus-visible{outline:1px solid var(--red);outline-offset:-1px}
 .idx{font-family:var(--mono);font-size:9.5px;color:var(--ink-4);letter-spacing:.02em;padding-top:4px}
@@ -185,8 +189,59 @@ ul.list{list-style:none;margin:0;padding:0}
 .chev::after{right:2px;transform:rotate(-45deg)}
 .item.open .chev{transform:rotate(180deg);opacity:.8}
 .item.open{background:var(--paper-2)}
-.item.checked .ttl{color:var(--ink-4);text-decoration:line-through;text-decoration-thickness:1px}
-.item.checked .box{background:var(--ink-4);border-color:var(--ink-4)}
+/* 勾上不再是「灰掉」，而是用状态色标出来：计划/准备中仍要读得清，已参加降一档，无法/不想才划掉 */
+.item.checked::before{transform:scaleY(1);background:var(--mkc,var(--ink-4));opacity:.5;transition:transform .22s var(--ease),opacity .18s}
+.item.checked:hover::before{opacity:1}
+/* 标题颜色按态度分档：已参加降一档，无法/不想才划掉。选择器带 .checked 才压得住 .ttl 原色 */
+.item.checked.m-done .ttl{color:var(--ink-3)}
+.item.checked.m-skip .ttl,.item.checked.m-cant .ttl{color:var(--ink-4);text-decoration:line-through;text-decoration-thickness:1px}
+.item.checked.m-skip .win,.item.checked.m-cant .win{color:var(--ink-4)}
+
+/* 状态标签 */
+.chip{
+  font-family:var(--sans);font-size:9.5px;line-height:1;letter-spacing:.02em;
+  border:1px solid;padding:3px 6px 3px 5px;cursor:pointer;background:none;
+  white-space:nowrap;display:inline-flex;align-items:center;gap:4px;
+}
+.chip i{width:5px;height:5px;border-radius:50%;display:block;flex:0 0 5px}
+.chip:hover{filter:brightness(.95)}
+.chip:focus-visible{outline:1.5px solid var(--red);outline-offset:2px}
+/* 未标记时只有一个虚线框的「标记」，常驻但很淡，悬停才亮起来 */
+.chip-add{
+  border:1px dashed var(--rule);color:var(--ink-4);background:none;
+  opacity:.42;transition:opacity .18s,color .18s,border-color .18s;
+}
+.chip-add i{background:transparent;border:1px solid var(--ink-4)}
+.item:hover .chip-add,.chip-add:focus-visible{opacity:1}
+.chip-add:hover{color:var(--red);border-color:var(--red)}
+.chip-add:hover i{border-color:var(--red)}
+@media(hover:none){.chip-add{opacity:.7}}
+
+/* 状态选择弹层。注意不能用 display:none 关它——关掉之后量出来的宽高是 0，定位就没法算。
+   改用 visibility 藏着，布局还在，随时量得到真实尺寸。 */
+.markmenu{
+  position:fixed;z-index:70;min-width:136px;background:var(--card);
+  border:1px solid var(--ink-3);box-shadow:0 12px 30px rgba(26,23,20,.18);
+  padding:4px;display:flex;flex-direction:column;
+  top:0;left:0;
+  /* 视口实在太矮时让菜单自己在内部滚，而不是被切掉 */
+  max-height:calc(100vh - 16px);overflow-y:auto;overscroll-behavior:contain;
+}
+.markmenu[hidden]{display:flex;visibility:hidden;pointer-events:none;box-shadow:none}
+.markmenu button{
+  display:flex;align-items:center;gap:8px;border:0;background:none;
+  font-family:var(--sans);font-size:12px;color:var(--ink-2);
+  padding:7px 9px;cursor:pointer;text-align:left;white-space:nowrap;
+}
+.markmenu button:hover{background:var(--paper-2);color:var(--ink)}
+.markmenu button i{width:6px;height:6px;border-radius:50%;flex:0 0 6px;display:block}
+.markmenu button em{margin-left:auto;color:var(--red);font-style:normal;font-size:10px;padding-left:10px}
+.markmenu .mm-off{border-top:1px solid var(--rule-2);margin-top:3px;color:var(--ink-3);font-size:11.5px}
+.markmenu .mm-off i{background:transparent!important;border:1px solid var(--ink-4)}
+
+/* 按状态分组时的组头 */
+.g-head.mk{border-bottom:1px solid var(--ink)}
+.mk-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:7px;vertical-align:2px}
 
 /* panel */
 .panel{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s var(--ease)}
@@ -295,7 +350,7 @@ footer{border-top:1px solid var(--rule);margin-top:26px;padding:18px 0 38px;posi
 <div class="masthead">
   <div class="wrap">
     <div class="brand">郑州轻工业大学 · 单项奖学金评定参考项目</div>
-    <div class="edition">2026<span>—</span>2027　·　数字媒体技术　·　已勾 <b id="mh-count">0</b></div>
+    <div class="edition">2026<span>—</span>2027　·　数字媒体技术　·　已标记 <b id="mh-count">0</b></div>
   </div>
 </div>
 
@@ -303,8 +358,8 @@ footer{border-top:1px solid var(--rule);margin-top:26px;padding:18px 0 38px;posi
   <div class="kicker">Competition Checklist</div>
   <h1>竞赛<em>待办</em>清单</h1>
   <p class="lede">
-    学校 2026 年认定的 <b>328 项</b>赛事，按认定顺序排在这里。点标题展开赛程和准备清单，左边勾选框记自己的进度。
-    39 项写了详细赛程，其中 <b><span id="n-ok">9</span> 项</b>的时间查到了官方通知，标「核实」；其余按往届推算，标「推算」。
+    学校 2026 年认定的 <b>328 项</b>赛事，按认定顺序排。点标题看赛程；勾选框或右侧标签给这一项定个态度，标过的会归到「已标记」按态度分组。
+    <span id="n-feat2">39</span> 项有详细赛程，其中 <b><span id="n-ok">9</span> 项</b>时间已核实，其余按往届推算。
   </p>
   <div class="stats">
     <div class="stat"><b id="m-total">328</b><span>项赛事</span></div>
@@ -330,6 +385,8 @@ footer{border-top:1px solid var(--rule);margin-top:26px;padding:18px 0 38px;posi
 
 <main class="wrap" id="main"></main>
 
+<div class="markmenu" id="markmenu" role="menu" aria-label="标记状态" hidden></div>
+
 <footer>
   <div class="wrap foot-in">
     <p>
@@ -344,9 +401,48 @@ footer{border-top:1px solid var(--rule);margin-top:26px;padding:18px 0 38px;posi
 <script>const DATA = __DATA__;</script>
 <script>
 (function(){
-  var KEY='wb-comp-check-v1';
-  var state={q:'',g:'all',mode:'all',open:new Set(),checked:new Set()};
-  try{var raw=localStorage.getItem(KEY);if(raw)state.checked=new Set(JSON.parse(raw));}catch(e){}
+  var KEY='wb-comp-mark-v2',OLD='wb-comp-check-v1';
+  // 勾选不再是「勾了/没勾」，而是给这一项定一个态度。顺序就是分组展示的顺序。
+  var MARKS=[
+    {k:'plan', t:'计划参加', c:'#9C3A28', bg:'#F8EBE7', bd:'#D9B3A9', glyph:'check'},
+    {k:'doing',t:'准备中',   c:'#8A5A18', bg:'#F8F0DF', bd:'#DCC396', glyph:'check'},
+    {k:'done', t:'已参加',   c:'#2E5A4B', bg:'#E9F0EC', bd:'#BCD1C8', glyph:'check'},
+    {k:'cant', t:'无法参加', c:'#6B6157', bg:'#F1ECE3', bd:'#D5CAB7', glyph:'dash'},
+    {k:'skip', t:'不想参加', c:'#8A8174', bg:'#F4F0E8', bd:'#E0D6C6', glyph:'dash'}
+  ];
+  var MK={};MARKS.forEach(function(m){MK[m.k]=m});
+  // 每个态度一句话，用在「已标记」分组头上，省得用户反问这组是什么意思
+  var MK_DESC={
+    plan:'想打，还没开始准备',
+    doing:'已经在准备材料或组队了',
+    done:'参加过，成绩待出或已出',
+    cant:'时间冲突，或者今年不符合条件',
+    skip:'不合适，不打算投入'
+  };
+  var state={q:'',g:'all',mode:'all',open:new Set(),marks:{}};
+  try{
+    var raw=localStorage.getItem(KEY);
+    if(raw){
+      var o=JSON.parse(raw);
+      Object.keys(o).forEach(function(k){if(MK[o[k]])state.marks[k]=o[k]});
+    }else{
+      // 老版本只存了 id 数组，迁过来当成「计划参加」，并立刻落盘成新格式，
+      // 免得下次刷新时旧键已经被清掉、标记全丢
+      var old=localStorage.getItem(OLD);
+      if(old){
+        var arr=JSON.parse(old);
+        if(arr&&arr.length){
+          arr.forEach(function(id){state.marks[id]='plan'});
+          try{localStorage.setItem(KEY,JSON.stringify(state.marks))}catch(e){}
+        }
+      }
+    }
+  }catch(e){}
+
+  function saveMarks(){
+    try{localStorage.setItem(KEY,JSON.stringify(state.marks))}catch(e){}
+  }
+  function marked(){return Object.keys(state.marks)}
 
   var $=function(s,r){return (r||document).querySelector(s)};
   var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
@@ -359,11 +455,12 @@ footer{border-top:1px solid var(--rule);margin-top:26px;padding:18px 0 38px;posi
   $('#m-total').textContent=items.length;
   $('#m-now').textContent=nNow;
   $('#m-feat').textContent=nFeat;
-  // 核实条数不写死，从数据里数，免得以后改数据文案对不上
+  // 核实条数、详细赛程条数都不写死，从数据里数，免得以后改数据文案对不上
   var nOk=items.filter(function(i){return i.conf==='已核实'}).length;
-  var e1=$('#n-ok'),e2=$('#n-ok2');
+  var e1=$('#n-ok'),e2=$('#n-ok2'),e3=$('#n-feat2');
   if(e1)e1.textContent=nOk;
   if(e2)e2.textContent=nOk;
+  if(e3)e3.textContent=nFeat;
 
   var today=new Date();today.setHours(0,0,0,0);
   var dls=items.filter(function(i){return i.dl}).map(function(i){
@@ -404,7 +501,7 @@ footer{border-top:1px solid var(--rule);margin-top:26px;padding:18px 0 38px;posi
   var modes=[{k:'all',t:'全部',n:items.length},
              {k:'now',t:'现在能报',n:nNow},
              {k:'feat',t:'有详细赛程',n:nFeat},
-             {k:'done',t:'已勾选',n:state.checked.size}];
+             {k:'done',t:'已标记',n:marked().length}];
   $('#seg').innerHTML=modes.map(function(c){
     return '<button data-k="'+c.k+'"><span>'+c.t+'</span><span class="n">'+c.n+'</span></button>';
   }).join('');
@@ -475,21 +572,34 @@ footer{border-top:1px solid var(--rule);margin-top:26px;padding:18px 0 38px;posi
       +'</div>';
   }
 
+  function chipHTML(it){
+    var mk=MK[state.marks[it.id]];
+    if(!mk)return '<button class="chip chip-add" data-chip="'+it.id+'"><i></i>标记</button>';
+    return '<button class="chip" data-chip="'+it.id+'" style="color:'+mk.c+';border-color:'+mk.bd+';background:'+mk.bg+'">'
+      +'<i style="background:'+mk.c+'"></i>'+mk.t+'</button>';
+  }
+
   function rowHTML(it){
-    var isC=state.checked.has(it.id),isO=state.open.has(it.id);
+    // 这里要的是 MARKS 里的配置对象（有 c/bg/bd），不是 state 里那个状态字符串
+    var mk=MK[state.marks[it.id]],isC=!!mk,isO=state.open.has(it.id);
     var flag=(it.st==='now')?'<i class="openflag">现在能报</i>':'';
     var src=it.featured?(it.conf==='已核实'
       ?'<i class="src src-ok">核实</i>':'<i class="src">推算</i>'):'';
     var w=shortWin(it);
-    return '<li class="item'+(isC?' checked':'')+(isO?' open':'')+(it.g==='不予认定'?' dim':'')+'" data-id="'+it.id+'">'
+    // rowmain 用 div 而不是 button：里面还要放状态标签按钮，button 不能嵌套 button
+    // 方框的颜色直接内联写死，不走 CSS 变量——变量继承叠上 transition 时计算值会飘
+    var boxStyle=isC?(' style="background:'+mk.c+';border-color:'+mk.c+'"'):'';
+    return '<li class="item'+(isC?' checked':'')+(isO?' open':'')+(it.g==='不予认定'?' dim':'')
+      +(isC?' m-'+mk.k:'')+'" data-id="'+it.id+'"'
+      +(isC?' style="--mkc:'+mk.c+'"':'')+'>'
       +'<div class="row">'
         +'<label class="chk"><input type="checkbox" '+(isC?'checked':'')+' aria-label="标记">'
-        +'<span class="box"></span></label>'
-        +'<button class="rowmain" aria-expanded="'+(isO?'true':'false')+'">'
+        +'<span class="box"'+boxStyle+'></span></label>'
+        +'<div class="rowmain" role="button" tabindex="0" aria-expanded="'+(isO?'true':'false')+'">'
           +'<span class="idx">'+esc(it.id.replace('-','·'))+'</span>'
           +'<span class="ttl">'+esc(it.name)+'</span>'
-          +'<span class="meta">'+flag+src+(w?'<span class="win">'+esc(w)+'</span>':'')+'<span class="chev"></span></span>'
-        +'</button>'
+          +'<span class="meta">'+chipHTML(it)+flag+src+(w?'<span class="win">'+esc(w)+'</span>':'')+'<span class="chev"></span></span>'
+        +'</div>'
       +'</div>'
       +'<div class="panel"><div class="inner"><div class="panel-body">'
       +(it.featured?panelFeatured(it):panelPlain(it))
@@ -500,7 +610,7 @@ footer{border-top:1px solid var(--rule);margin-top:26px;padding:18px 0 38px;posi
     if(state.g!=='all'&&it.g!==state.g)return false;
     if(state.mode==='now'&&it.st!=='now')return false;
     if(state.mode==='feat'&&!it.featured)return false;
-    if(state.mode==='done'&&!state.checked.has(it.id))return false;
+    if(state.mode==='done'&&!state.marks[it.id])return false;
     if(state.q){
       var hay=(it.name+' '+(it.note||'')+' '+(it.award||'')+' '+(it.entry||'')+' '+(it.dept||'')).toLowerCase();
       if(hay.indexOf(state.q)<0)return false;
@@ -508,7 +618,40 @@ footer{border-top:1px solid var(--rule);margin-top:26px;padding:18px 0 38px;posi
     return true;
   }
 
+  // 「已标记」按态度分组，其余视图仍按学校级别分组
+  function renderMarks(){
+    var html='',count=0;
+    MARKS.forEach(function(mk){
+      var list=items.filter(function(it){return it.g!=='不予认定'&&state.marks[it.id]===mk.k&&match(it)});
+      if(!list.length)return;
+      count+=list.length;
+      html+='<section class="group" data-mk="'+mk.k+'">'
+        +'<div class="g-head mk"><div class="g-no" style="color:'+mk.bd+'">'
+          +('0'+list.length).slice(-2)+'</div>'
+        +'<div><h2><span class="mk-dot" style="background:'+mk.c+'"></span>'+mk.t+'</h2>'
+          +'<p>'+MK_DESC[mk.k]+'</p></div>'
+        +'<div class="g-count">'+list.length+' 项</div></div>'
+        +'<ul class="list">'+list.map(rowHTML).join('')+'</ul></section>';
+    });
+    // 不予认定的如果被标记了，单独放最后，不要混进上面五组
+    var others=items.filter(function(it){return it.g==='不予认定'&&state.marks[it.id]&&match(it)});
+    if(others.length){
+      count+=others.length;
+      html+='<section class="group" data-mk="other">'
+        +'<div class="g-head mk"><div class="g-no" style="color:var(--rule)">'+('0'+others.length).slice(-2)+'</div>'
+        +'<div><h2><span class="mk-dot" style="background:var(--ink-4)"></span>不予认定项</h2>'
+          +'<p>学校不认这些，标记了也只是留个记录。</p></div>'
+        +'<div class="g-count">'+others.length+' 项</div></div>'
+        +'<ul class="list">'+others.map(rowHTML).join('')+'</ul></section>';
+    }
+    $('#main').innerHTML=html||'<div class="empty"><b>还没有标记任何一项</b>'
+      +'点每条右边的「标记」，选一个状态。标记过的会按状态分好组出现在这里。</div>';
+    $('#shown').textContent=count+' 项';
+    sync();
+  }
+
   function render(){
+    if(state.mode==='done')return renderMarks();
     var html='',count=0;
     DATA.meta.groups.forEach(function(g,gi){
       var list=items.filter(function(it){return it.g===g.key&&match(it)});
@@ -526,7 +669,93 @@ footer{border-top:1px solid var(--rule);margin-top:26px;padding:18px 0 38px;posi
     sync();
   }
 
+  // ── 标记状态：勾选框只表达「有标记/没标记」，具体态度由右侧标签决定 ──
+  var mkmenu=$('#markmenu'),mkFor=null;
+  function setMark(id,key){
+    if(key&&MK[key])state.marks[id]=key;else delete state.marks[id];
+    saveMarks();
+  }
+  // 非「已标记」视图就地改这一行，避免整页重绘把视口顶走
+  function paintRow(id){
+    var li=$('.item[data-id="'+id+'"]');
+    if(!li)return;
+    var mk=MK[state.marks[id]];
+    li.classList.toggle('checked',!!mk);
+    MARKS.forEach(function(m){li.classList.remove('m-'+m.k)});
+    if(mk){li.classList.add('m-'+mk.k);li.style.setProperty('--mkc',mk.c)}
+    else li.style.removeProperty('--mkc');
+    var inp=li.querySelector('input[type=checkbox]');
+    if(inp)inp.checked=!!mk;
+    var box=li.querySelector('.box');
+    if(box){
+      if(mk){box.style.background=mk.c;box.style.borderColor=mk.c}
+      else{box.style.background='';box.style.borderColor=''}
+    }
+    var old=li.querySelector('.chip');
+    if(old){
+      var tmp=document.createElement('span');
+      tmp.innerHTML=chipHTML({id:id});
+      old.replaceWith(tmp.firstChild);
+    }
+  }
+  function chipListHTML(id){
+    var cur=state.marks[id];
+    var h=MARKS.map(function(m){
+      return '<button type="button" data-mk="'+m.k+'" role="menuitemradio" aria-checked="'+(cur===m.k?'true':'false')+'">'
+        +'<i style="background:'+m.c+'"></i>'+m.t
+        +(cur===m.k?'<em>当前</em>':'')+'</button>';
+    }).join('');
+    if(cur)h+='<button type="button" class="mm-off" data-mk="" role="menuitem"><i></i>取消标记</button>';
+    return h;
+  }
+  function openMenu(id,anchor){
+    mkFor=id;
+    mkmenu.innerHTML=chipListHTML(id);
+    // 关掉状态是 visibility:hidden，布局还在，所以能直接量到真实宽高
+    mkmenu.hidden=false;
+    var r=anchor.getBoundingClientRect();
+    var vw=document.documentElement.clientWidth,vh=document.documentElement.clientHeight;
+    var mr=mkmenu.getBoundingClientRect(),mw=mr.width,mh=mr.height;
+    // 横向：右对齐到标签，两边各留 8
+    var left=r.right-mw;
+    left=Math.min(Math.max(8,left),Math.max(8,vw-8-mw));
+    // 纵向：默认往下开，下面放不下就翻到上面，两边都不行就贴最近的那条边
+    var top=r.bottom+6;
+    if(top+mh>vh-8){
+      var up=r.top-6-mh;
+      top=up>=8?up:(vh-8-mh>=8?vh-8-mh:8);
+    }
+    if(top<8)top=8;
+    mkmenu.style.left=Math.round(left)+'px';
+    mkmenu.style.top=Math.round(top)+'px';
+    // 摆好后再复核一次，字体换行或出现滚动条都可能让实际高度和估算差一点
+    var m2=mkmenu.getBoundingClientRect();
+    if(m2.bottom>vh-6){
+      var t2=Math.min(r.top-6-m2.height,vh-6-m2.height);
+      if(t2>=6)mkmenu.style.top=Math.round(t2)+'px';
+    }
+    if(m2.right>vw-6){
+      mkmenu.style.left=Math.round(Math.max(6,vw-6-m2.width))+'px';
+    }
+    var first=mkmenu.querySelector('button');
+    if(first)first.focus();
+  }
+  function closeMenu(){
+    if(mkmenu.hidden)return;
+    mkmenu.hidden=true;mkmenu.innerHTML='';mkFor=null;
+  }
+
   $('#main').addEventListener('click',function(e){
+    var chip=e.target.closest('.chip');
+    if(chip){
+      e.preventDefault();e.stopPropagation();
+      var cid=chip.closest('.item').dataset.id;
+      if(mkFor===cid&&!mkmenu.hidden){closeMenu();return}
+      openMenu(cid,chip);
+      return;
+    }
+    // 菜单开着时点别处先关，不误触折叠
+    if(!mkmenu.hidden)closeMenu();
     var btn=e.target.closest('.rowmain');
     if(!btn)return;
     var item=btn.closest('.item'),id=item.dataset.id;
@@ -536,22 +765,50 @@ footer{border-top:1px solid var(--rule);margin-top:26px;padding:18px 0 38px;posi
     if(open)state.open.add(id);else state.open.delete(id);
   });
 
+  $('#main').addEventListener('keydown',function(e){
+    var btn=e.target.closest('.rowmain');
+    if(!btn)return;
+    if(e.key==='Enter'||e.key===' '){e.preventDefault();btn.click()}
+  });
+
+  mkmenu.addEventListener('click',function(e){
+    var b=e.target.closest('button');
+    if(!b||mkFor==null)return;
+    var id=mkFor,key=b.dataset.mk||null;
+    closeMenu();
+    setMark(id,key);
+    paint();
+    // 「已标记」视图按态度分组，改了就得分组重排；其余视图就地改行
+    if(state.mode==='done')render();else paintRow(id);
+  });
+  document.addEventListener('click',function(e){
+    if(mkmenu.hidden)return;
+    if(e.target.closest('#markmenu')||e.target.closest('.chip'))return;
+    closeMenu();
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'&&!mkmenu.hidden){e.preventDefault();closeMenu()}
+  });
+  // 弹层是 fixed 的，页面一滚就脱位，直接收掉
+  window.addEventListener('scroll',function(){if(!mkmenu.hidden)closeMenu()},{passive:true});
+  window.addEventListener('resize',function(){if(!mkmenu.hidden)closeMenu()});
+
   $('#main').addEventListener('change',function(e){
     var inp=e.target;
     if(!inp.matches('input[type=checkbox]'))return;
     var li=inp.closest('.item'),id=li.dataset.id;
-    if(inp.checked)state.checked.add(id);else state.checked.delete(id);
-    li.classList.toggle('checked',inp.checked);
-    try{localStorage.setItem(KEY,JSON.stringify(Array.from(state.checked)))}catch(err){}
+    // 勾上默认「计划参加」；已标记的再勾一次不改变它原来的态度
+    if(inp.checked){if(!state.marks[id])setMark(id,'plan')}
+    else setMark(id,null);
     paint();
-    if(state.mode==='done'&&!inp.checked){
-      li.style.transition='opacity .2s';li.style.opacity='0';
-      setTimeout(render,200);
-    }
+    if(state.mode==='done'){
+      li.style.transition='opacity .18s';li.style.opacity='0';
+      setTimeout(render,180);
+    }else paintRow(id);
   });
 
   function paint(){
-    var n=state.checked.size,total=items.length;
+    var n=marked().length,total=items.length;
     $('#bar').style.width=(n/total*100)+'%';
     $('#mh-count').textContent=n;
     var b=$$('.seg button').filter(function(x){return x.dataset.k==='done'})[0];
